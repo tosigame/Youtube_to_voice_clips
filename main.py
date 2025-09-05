@@ -14,14 +14,6 @@ def run(args):
     n = args.n
     duration = args.duration
 
-
-    # Ensure user provided either YouTube URL or audio file
-    if not youtube_url and not audio_path:
-        raise ValueError("You must provide either --youtube_url or --audio_path")
-
-    if youtube_url and audio_path:
-        raise ValueError("Choose only one: --youtube_url OR --audio_path")
-
     if youtube_url:
         ydl_options = {
         "format": "bestaudio/best",   # get best available audio
@@ -87,17 +79,23 @@ def run(args):
         )
         pad = 0.1
         utils.extract_clip(filename,ts_start,ts_end+pad,output_file)
-        result = model.transcribe(output_file)
+        clip_result = model.transcribe(output_file)
         print(f"[{ts_start:.2f}-{ts_end:.2f}] ({density:.2f} w/s) → {output_file}")
-        print(result["text"])
+        print(clip_result["text"])
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = "program to download and extract dense clips from youtube or mp3 file")
 
-    parser.add_argument("-y", "--youtube_url", type=str, help="URL to Youtube video")
-    parser.add_argument("-o", "--output_dir", type=str, help="Output Directory Path")
-    parser.add_argument("-a", "--audio_path", type=str, help="Path of Audio File")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-y", "--youtube_url", type=str, help="URL to YouTube video")
+    group.add_argument("-a", "--audio_path", type=str, help="Path of audio file")
+
+    parser.add_argument(
+        "-o", "--output_dir",
+          type=utils.valid_dir, 
+          help="Output Directory Path (will be created if missing)")
+
     parser.add_argument("-n",type=int, default=5, help="Number of Maximum Clips to extract")
     parser.add_argument("-d","--duration",type=int, default=10, help="Targeted Duration of clips")
 
