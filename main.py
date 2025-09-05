@@ -22,56 +22,50 @@ with yt_dlp.YoutubeDL(ydl_options) as ydl:
     filename = ydl.prepare_filename(info).replace(info["ext"], "mp3")
 
 model = whisper.load_model("large")
-result = model.transcribe(filename)
-segments = result["segments"]
+result = model.transcribe(filename, word_timestamps=True)
 
-scored_segments = []
-
-
-## for seg in segments:
-##     duration  = seg["end"]-seg["start"]
-##     words = len(seg["text"].split())
-##     density = words / duration if duration > 0 else 0
-## 
-##     if duration >= 5:
-##         scored_segments.append((density,seg))
+all_words = []
+for seg in result["segments"]:
+    all_words.extend(seg["words"])
 
 
-start = 0
-end = 0
-while end < len(segments):
-    duration = segments[end]["end"] - segments[start]["start"]
-    if duration < 10:
-        end+=1
-        continue
+clips = []
+start_idx = 0
 
-    text = " ".join([segments[x]["text"] for x in range(start,end+1)])
-    density = len(text.split())/duration
-    scored_segments.append((
-        density,
-        text,
-        segments[start]["start"],
-        segments[end]["end"]
+for i in range(len(all_words)):
+    duration = all_words[i]["end"] - all_words[start_idx]["start"]
+    if duration >= 10:
+        text = " ".join(w["word"] for w in all_words[start_idx:i+1])
+        words = len(text.split())
+        density = words / duration
+        clips.append((
+            density,
+            text,
+            all_words[start_idx]["start"],
+            all_words[i]["end"]
         ))
-    start = end
-    end = start
-    
+        start_idx = i + 1
 
 
-scored_segments.sort(key = lambda x: x[0], reverse=True)
 
-top_segments = scored_segments[:3]
+clips.sort(key = lambda x: x[0], reverse=True)
+
+top = clips[:3]
 
 #for seg in top_segments:
 #    print(f"{seg[1]}s - {seg[2]}s:", seg[0])
 
 
-for i,(density, text, ts_start, ts_end) in enumerate(top_segments,start=1):
-    print(f"[{ts_start:.2f}s - {ts_end:.2f}s] ({density:.2f} w/s): {text}")
+for j,(density, text, ts_start, ts_end) in enumerate(top,1):
 
-    output_file = f"{i}.mp3"
-    utils.extract_clip(filename,ts_start,ts_end,output_file)
-    print(f" Saved {output_file}")
+    output_file = f"{j}.mp3"
+    pad = 0.1
+    utils.extract_clip(filename,ts_start,ts_end+pad,output_file)
+    result = model.transcribe(output_file)
+    print(f"[{ts_start:.2f}-{ts_end:.2f}] ({density:.2f} w/s) → {output_file}")
+    print(result["text"])
+
+
 
 
 

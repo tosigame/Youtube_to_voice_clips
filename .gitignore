@@ -1,0 +1,6 @@
+# Audio files
+*.mp3
+.venv
+venv
+.*cache
+__pycache__
