@@ -116,3 +116,14 @@ python3 .\main.py -a "C:\path\to\talk.mp3" -o clips -n 8 -d 15
 ## Notes
 
 Current version uses the large Whisper model, which can require ~10–11 GB of VRAM/RAM. If you run into memory limits, change the model in main.py to medium, small, or base.
+
+## License
+This project is licensed under the [MIT License](./LICENSE).
+
+## Ethical Use & Disclaimer
+This is a learning project. Please use it responsibly.
+
+- Only download/transcribe content you **own** or have **explicit permission** to use.
+- Respect platform Terms of Service (e.g., YouTube) and local copyright laws.
+- The authors are not responsible for how this software is used.
+- Provided **as is**, without warranty; see the MIT license for details.
