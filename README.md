@@ -52,7 +52,7 @@ cd <YOUR_REPO_NAME>
 
 ### 2) Create & activate a virtual environment
 ```python
-python -m venv .venv
+python3 -m venv .venv
 ```
 
 ### macOS/Linux
@@ -81,7 +81,7 @@ Whisper will install PyTorch automatically. If you need a specific CUDA/MPS buil
 ## Usage
 ### CLI
 ```python
-python main.py (-y YOUTUBE_URL | -a AUDIO_PATH) [-o OUTPUT_DIR] [-n N] [-d DURATION]
+python3 main.py (-y YOUTUBE_URL | -a AUDIO_PATH) [-o OUTPUT_DIR] [-n N] [-d DURATION]
 ```
 
 ### Arguments
@@ -102,7 +102,7 @@ python main.py (-y YOUTUBE_URL | -a AUDIO_PATH) [-o OUTPUT_DIR] [-n N] [-d DURAT
 
 ```
 source .venv/bin/activate
-python main.py -y "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -o clips -n 5 -d 12
+python3 main.py -y "https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=1s" -o clips -n 5 -d 12
 ```
 
 
@@ -110,7 +110,7 @@ python main.py -y "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -o clips -n 5 -d
 
 ```python
 .\.venv\Scripts\Activate.ps1
-python .\main.py -a "C:\path\to\talk.mp3" -o clips -n 8 -d 15
+python3 .\main.py -a "C:\path\to\talk.mp3" -o clips -n 8 -d 15
 ```
 
 ## Notes
