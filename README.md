@@ -1,4 +1,4 @@
-# DenseClipper — Densest Spoken Segments Extractor
+# Youtube_to_voice_clips — Densest Spoken Segments Extractor
 
 Extract the densest spoken segments from a YouTube video or an audio file using yt-dlp
  to fetch audio and OpenAI Whisper
